@@ -1,6 +1,6 @@
 package com.app.nammatumkur.education.model;
 
-import com.app.nammatumkur.logos.model.Logo;
+import com.app.nammatumkur.generic.model.ContactDetails;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -11,31 +11,34 @@ public class Education implements Serializable {
 
     @Id
     private String id;
-    private String type;
-    private Logo logos;
 
+    private String name;
 
-    public String getCatId() {
-        return id;
+    private String about;
+
+    private ContactDetails contactDetails;
+
+    public ContactDetails getContactDetails() {
+        return contactDetails;
     }
 
-    public String getType() {
-        return type;
+    public void setContactDetails(ContactDetails contactDetails) {
+        this.contactDetails = contactDetails;
     }
 
-    public void setCatId(String id) {
-        this.id = id;
+    public String getAbout() {
+        return about;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setAbout(String about) {
+        this.about = about;
     }
 
-    public Logo getLogos() {
-        return logos;
+    public String getName() {
+        return name;
     }
 
-    public void setLogos(Logo logos) {
-        this.logos = logos;
+    public void setName(String name) {
+        this.name = name;
     }
 }

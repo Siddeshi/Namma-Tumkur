@@ -4,4 +4,6 @@ import com.app.nammatumkur.education.model.Education;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface EducationRepository extends MongoRepository<Education, String> {
+    Education findByName(String name);
+    boolean existsByName(String name);
 }
