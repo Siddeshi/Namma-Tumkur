@@ -11,5 +11,6 @@ public interface SubCategoryService {
     List<SubCategory> findByType(String type) throws Exception;
     Object save(String subcatStr, MultipartFile file) throws Exception;
     Object removeSubCat(String id) throws Exception;
-    Education findByTypeAndName(String type, String name) throws Exception;
+    Object findByTypeAndName(String type, String name) throws Exception;
+    void deleteAll() throws Exception;
 }

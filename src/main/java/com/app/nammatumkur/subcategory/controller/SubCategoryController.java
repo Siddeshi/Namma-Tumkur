@@ -65,4 +65,9 @@ public class SubCategoryController {
         return new ResponseEntity<>(subCategoryService.findByTypeAndName(type, name), HttpStatus.OK);
     }
 
+    @RequestMapping(value = "deleteall", method = RequestMethod.DELETE)
+    public ResponseEntity<Void> deleteAll() throws Exception {
+        subCategoryService.deleteAll();
+        return new ResponseEntity<Void>(HttpStatus.OK);
+    }
 }

@@ -1,4 +1,4 @@
-package com.app.nammatumkur.education.model;
+package com.app.nammatumkur.hotspots.model;
 
 import com.app.nammatumkur.generic.model.ContactDetails;
 import org.springframework.data.annotation.Id;
@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.io.Serializable;
 
 @Document
-public class Education implements Serializable {
+public class Hotspots implements Serializable {
 
     @Id
     private String id;
@@ -18,20 +18,20 @@ public class Education implements Serializable {
 
     private ContactDetails contactDetails;
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public String getId() {
         return id;
     }
 
-    public ContactDetails getContactDetails() {
-        return contactDetails;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public void setContactDetails(ContactDetails contactDetails) {
-        this.contactDetails = contactDetails;
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getAbout() {
@@ -42,11 +42,11 @@ public class Education implements Serializable {
         this.about = about;
     }
 
-    public String getName() {
-        return name;
+    public ContactDetails getContactDetails() {
+        return contactDetails;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setContactDetails(ContactDetails contactDetails) {
+        this.contactDetails = contactDetails;
     }
 }
