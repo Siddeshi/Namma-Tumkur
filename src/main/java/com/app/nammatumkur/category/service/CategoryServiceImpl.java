@@ -6,8 +6,10 @@ import com.app.nammatumkur.category.repos.CategoryRepository;
 import com.app.nammatumkur.logos.model.Logo;
 import com.app.nammatumkur.logos.repos.LogosDAL;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -22,20 +24,16 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private final LogosDAL logosDAL;
-    private final CategoryDAL categoryDAL;
     private final CategoryRepository categoryRepository;
 
+    @Autowired
     public CategoryServiceImpl(LogosDAL logosDAL, CategoryDAL categoryDAL, CategoryRepository categoryRepository) {
-
-        this.logosDAL = logosDAL;
-        this.categoryDAL = categoryDAL;
         this.categoryRepository = categoryRepository;
     }
 
     @Override
     @Transactional
-    public ResponseEntity<Object> addNewCategory(String categoryStr, String logoStr, MultipartFile file) throws Exception {
+    public ResponseEntity<Object> addNewCategory(String categoryStr, MultipartFile file) throws Exception {
 
         try {
 
@@ -43,18 +41,24 @@ public class CategoryServiceImpl implements CategoryService {
 
             ObjectMapper objectMapper = new ObjectMapper();
 
-            Category categoryObj = objectMapper.readValue(categoryStr, Category.class);
-            Logo logosObj = objectMapper.readValue(logoStr, Logo.class);
+            Category categoryObj = objectMapper.readValue(new JSONObject(categoryStr).getJSONObject("category").toString(), Category.class);
 
-            Logo logo = new Logo(file.getBytes(), logosObj.getDescription(), logosObj.getFilename(), file.getContentType(), new Date());
+            Logo logo = new Logo(file.getBytes(), file.getOriginalFilename(), file.getContentType(), new Date());
 
-            Category category = new Category();
+            Category category;
+            if (!categoryRepository.existsByType(categoryObj.getType())) { // check category is exists
+                category = new Category();
 
-            category.setType(categoryObj.getType());
-            category.setLogos(logo);
-            categoryDAL.addNewCategory(category);
-
-            return new ResponseEntity<>("Added new category successfully",HttpStatus.CREATED);
+                category.setType(categoryObj.getType());
+                category.setLogos(logo);
+                categoryRepository.save(category);
+                return new ResponseEntity<>("Added new category successfully",HttpStatus.CREATED);
+            } else { //if exists update category
+                category = categoryRepository.findByType(categoryObj.getType());
+                category.setLogos(logo);
+                categoryRepository.save(category);
+                return new ResponseEntity<>("Updated category successfully",HttpStatus.CREATED);
+            }
 
         } catch (Exception ex) {
 
@@ -74,7 +78,7 @@ public class CategoryServiceImpl implements CategoryService {
 
             logger.debug("list of all categories");
 
-            return new ResponseEntity<List<Category>>(categoryDAL.getAllCategory(), HttpStatus.OK);
+            return new ResponseEntity<List<Category>>(categoryRepository.findAll(), HttpStatus.OK);
 
         } catch (Exception ex) {
 
@@ -95,7 +99,11 @@ public class CategoryServiceImpl implements CategoryService {
         try {
 
             logger.debug("Deleting category with ID: " + id);
-            return new ResponseEntity<Object>("Deleted category: "+categoryDAL.deleteCategoryById(id).getType()+" successfully.", HttpStatus.OK);
+            if (!categoryRepository.exists(id)) {
+                return new ResponseEntity<Object>("Category not exist", HttpStatus.OK);
+            }
+            categoryRepository.delete(id);
+            return new ResponseEntity<Object>("Deleted category successfully.", HttpStatus.OK);
 
         } catch (Exception ex) {
 
@@ -116,7 +124,7 @@ public class CategoryServiceImpl implements CategoryService {
 
             logger.debug("listing category with ID: " + id);
 
-            return new ResponseEntity<Category>(categoryDAL.getCategoryById(id), HttpStatus.OK);
+            return new ResponseEntity<Category>(categoryRepository.findOne(id), HttpStatus.OK);
 
         } catch (Exception ex) {
 
@@ -124,6 +132,23 @@ public class CategoryServiceImpl implements CategoryService {
             ex.printStackTrace();
             throw ex;
 
+        } finally {
+
+        }
+    }
+
+    @Override
+    @Transactional
+    public ResponseEntity<Object> deleteAllCategories() throws Exception {
+
+        try {
+            logger.debug("Deleting all the categories");
+            categoryRepository.deleteAll();
+            return new ResponseEntity<>("Deleted all the categories", HttpStatus.ACCEPTED);
+        } catch (Exception ex) {
+            logger.error("Exception while deleting all the categories");
+            ex.printStackTrace();
+            throw ex;
         } finally {
 
         }

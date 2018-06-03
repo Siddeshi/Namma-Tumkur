@@ -31,27 +31,21 @@ public class SubCategoryServiceImpl implements SubCategoryService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
     private final SubCategoryRepository subCategoryRepository;
 
-    @Autowired
     private final EducationRepository educationRepository;
 
-    @Autowired
     private final AttractionsRepository attractionsRepository;
 
-    @Autowired
     private final RestaurantsRepository restaurantsRepository;
 
-    @Autowired
     private final TemplesRepository templesRepository;
 
-    @Autowired
     private final HospitalsRepository hospitalsRepository;
 
-    @Autowired
     private final HotspotsRepository hotspotsRepository;
 
+    @Autowired
     public SubCategoryServiceImpl(SubCategoryRepository subCategoryRepository, EducationRepository educationRepository, AttractionsRepository attractionsRepository, RestaurantsRepository restaurantsRepository, TemplesRepository templesRepository, HospitalsRepository hospitalsRepository, HotspotsRepository hotspotsRepository) {
         this.subCategoryRepository = subCategoryRepository;
         this.educationRepository = educationRepository;
@@ -78,11 +72,9 @@ public class SubCategoryServiceImpl implements SubCategoryService {
             ObjectMapper objectMapper = new ObjectMapper();
             SubCategory subCategory = objectMapper.readValue(new JSONObject(subcatStr).getJSONObject("category").toString(), SubCategory.class);
 
-            Logo logoObj = objectMapper.readValue(new JSONObject(subcatStr).getJSONObject("logo").toString(), Logo.class);
-
             Object object = objectMapper.readValue(new JSONObject(subcatStr).getJSONObject(new JSONObject(subcatStr).getJSONObject("category").getString("type")).toString(), Education.class);
 
-            Logo logo = new Logo(file.getBytes(), logoObj.getDescription(), logoObj.getFilename(), file.getContentType(), new Date());
+            Logo logo = new Logo(file.getBytes(), file.getOriginalFilename(), file.getContentType(), new Date());
 
             subCategory.setLogo(logo);
 

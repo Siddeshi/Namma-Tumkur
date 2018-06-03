@@ -13,8 +13,6 @@ public class Logo implements Serializable {
 
     private byte[] image;
 
-    private String description;
-
     private String filename;
 
     private String contentType;
@@ -25,21 +23,13 @@ public class Logo implements Serializable {
 
     }
 
-    public Logo(byte[] image, String description, String filename, String contentType, Date date) {
+    public Logo(byte[] image, String filename, String contentType, Date date) {
 
         this.image = image;
-        this.description = description;
         this.filename = filename;
         this.contentType = contentType;
         this.created = date;
 
-    }
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public String getFilename() {

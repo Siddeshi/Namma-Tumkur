@@ -38,8 +38,8 @@ public class CategoryController {
      */
 
     @RequestMapping(value = "addcategory", method = RequestMethod.POST)
-    public ResponseEntity<Object> addNewCategory(@RequestParam("category") String category, @RequestParam("logo") String logo, @RequestParam("file") MultipartFile file) throws Exception {
-        return categoryService.addNewCategory(category, logo, file);
+    public ResponseEntity<Object> addNewCategory(@RequestParam("category") String category, @RequestParam("file") MultipartFile file) throws Exception {
+        return categoryService.addNewCategory(category, file);
     }
 
     /**
@@ -49,7 +49,6 @@ public class CategoryController {
 
     @RequestMapping(value = "listcategory", method = RequestMethod.GET)
     public ResponseEntity<List<Category>> categoryList() throws Exception {
-
         return categoryService.categoryList();
     }
 
@@ -60,7 +59,6 @@ public class CategoryController {
 
     @RequestMapping(value = "deletecategory", method = RequestMethod.DELETE)
     public ResponseEntity<Object> deleteCategory(@RequestParam String catId) throws Exception {
-
         return categoryService.deleteCategoryById(catId);
     }
 
@@ -71,7 +69,15 @@ public class CategoryController {
 
     @RequestMapping(value = "getcategorybyid", method = RequestMethod.GET)
     public ResponseEntity<Category> getCategoryById(@RequestParam String catId) throws Exception {
-
         return categoryService.getCategoryById(catId);
+    }
+
+    /**
+     * deleteAll categories
+     * Created by Siddesh on 02/06/18
+     */
+    @RequestMapping(value = "deleteallcategory", method = RequestMethod.DELETE)
+    public ResponseEntity<Object> deleteAllCateagories() throws Exception {
+        return categoryService.deleteAllCategories();
     }
 }

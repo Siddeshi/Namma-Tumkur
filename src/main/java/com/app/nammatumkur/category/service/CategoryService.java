@@ -8,8 +8,9 @@ import java.util.List;
 
 public interface CategoryService {
 
-    ResponseEntity<Object> addNewCategory(String categoryStr, String logoStr, MultipartFile file) throws Exception;
+    ResponseEntity<Object> addNewCategory(String categoryStr, MultipartFile file) throws Exception;
     ResponseEntity<List<Category>> categoryList() throws Exception;
     ResponseEntity<Object> deleteCategoryById(String id) throws Exception;
     ResponseEntity<Category> getCategoryById(String id) throws Exception;
+    ResponseEntity<Object> deleteAllCategories() throws Exception;
 }
